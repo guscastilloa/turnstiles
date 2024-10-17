@@ -29,14 +29,11 @@ library(plyr)
 library(lubridate)
 
 # Define directory locations ... UPDATE WITH PROPER LOCATIONS ...
-functions <- "/Users/tatiana/Dropbox/TC\ Columbia/Research/Turnstiles/Torniquetes_TRT/Data/GitHub/Turnstile_networks/Code" 
-source <- "/Users/tatiana/Dropbox/TC\ Columbia/Research/Turnstiles/Torniquetes_TRT/Data/P2000"
-store <- "/Users/tatiana/Dropbox/TC\ Columbia/Research/Turnstiles/Torniquetes_TRT/Data/data_processing"
+source <- "../data/P2000"
+store <- "01_build/03_output/"
 
 # Import functions
-# set working directory
-setwd(functions)
-source("all.full.edgelist.revisit.R")
+source("01_build/02_scripts/all.full.edgelist.revisit.R")
 
 
 ### --------------------------- ###
