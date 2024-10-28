@@ -6,7 +6,16 @@ import tempfile
 import logging
 import sys
 
-logging.basicConfig(filename='sort_log.txt', level=logging.INFO, format='%(asctime)s - %(message)s')
+# Update paths for input and output
+INPUT_PATH = "/hpcfs/home/economia/ga.castillo/projects/TOR/data/P2000/Accesos_P2000.csv"
+OUTPUT_PATH = "/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/03_output/Accesos_P2000_sorted.csv"
+LOG_PATH = "/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/04_temp/sort_log.txt"
+
+# Ensure output directory exists
+os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
+os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
+
+logging.basicConfig(filename=LOG_PATH, level=logging.INFO, format='%(asctime)s - %(message)s')
 
 CHUNK_SIZE = 1000000  # 1 million rows per chunk
 MAX_CHUNKS = 0  # 0 means process all chunks
@@ -111,11 +120,8 @@ def sort_large_csv(input_file, output_file):
         print(f"An error occurred: {str(e)}")
         raise
 
-input_file = r"C:/Users/t.rodriguezb/Dropbox/Torniquetes_TRT/Data/P2000/Accesos_P2000.csv"
-output_file = r"C:/Users/t.rodriguezb/Dropbox/Torniquetes_TRT/Data/P2000/Accesos_P2000_sorted.csv"
-
 try:
-    sort_large_csv(input_file, output_file)
+    sort_large_csv(INPUT_PATH, OUTPUT_PATH)
     print("Process completed successfully. Check sort_log.txt for details.")
 except Exception as e:
     print(f"An error occurred: {str(e)}")
