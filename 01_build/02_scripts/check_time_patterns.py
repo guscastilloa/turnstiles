@@ -65,7 +65,7 @@ def analyze_patterns(df):
     Analyze patterns and create visualizations
     """
     # Setup the plotting style
-    plt.style.use('seaborn')
+    plt.style.use("seaborn-v0_8")
     sns.set_palette("husl")
     
     # Create figure with multiple subplots
