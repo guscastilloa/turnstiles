@@ -81,6 +81,7 @@ def analyze_patterns(df):
     
     # 2. Time period distribution
     period_counts = df.groupby(['time_period', 'tipoacceso']).size().unstack(fill_value=0)
+    period_counts.columns = period_counts.columns.str.strip()
     period_counts.plot(kind='bar', ax=ax2)
     ax2.set_title('Campus Activity by Time Period')
     ax2.set_xlabel('Time Period')
