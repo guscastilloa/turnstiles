@@ -141,18 +141,18 @@ if __name__ == "__main__":
     time_windows = [3, 4, 5, 6, 7]
     
     # For testing with 2 files and 3 processes
-    process_files_parallel(
-        input_dir=input_dir,
-        output_dir=output_dir,
-        time_windows=time_windows,
-        sample_size=2,
-        n_processes=3
-    )
-    
-    # For processing all files, uncomment this:
     # process_files_parallel(
     #     input_dir=input_dir,
     #     output_dir=output_dir,
     #     time_windows=time_windows,
-    #     n_processes=15  # Adjust based on your node's capacity
+    #     sample_size=2,
+    #     n_processes=3
     # )
+    
+    # For processing all files, uncomment this:
+    process_files_parallel(
+        input_dir=input_dir,
+        output_dir=output_dir,
+        time_windows=time_windows,
+        n_processes=None  # Adjust based on your node's capacity
+    )
