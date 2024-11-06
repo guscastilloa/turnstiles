@@ -2,6 +2,9 @@ import csv
 from datetime import datetime
 import os
 
+INPUT_PATH = '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/03_output/Accesos_P2000_sorted.csv'
+OUTPUT_PATH = "/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/03_output/Daily"
+
 def split_csv_by_day(input_file, output_dir, max_lines=0):
     current_date = None
     current_file = None
@@ -44,15 +47,11 @@ def split_csv_by_day(input_file, output_dir, max_lines=0):
     print(f"Total rows processed: {row_count}")
     print("File splitting completed.")
 
-# File paths
-input_file = r"C:/Users/t.rodriguezb/Dropbox/Torniquetes_TRT/Data/P2000/Accesos_P2000_sorted.csv"
-output_dir = r"C:/Users/t.rodriguezb/Dropbox/Torniquetes_TRT/Data/P2000/Daily"
-
 # Ensure the output directory exists
-os.makedirs(output_dir, exist_ok=True)
+os.makedirs(OUTPUT_PATH, exist_ok=True)
 
 # Set the number of lines to process (0 for all lines, or a specific number for testing)
 test_lines = 0  # Change this to a positive number for testing, or keep it as 0 to process all lines
 
 # Run the splitting process
-split_csv_by_day(input_file, output_dir, max_lines=test_lines)
+split_csv_by_day(INPUT_PATH, OUTPUT_PATH, max_lines=test_lines)
