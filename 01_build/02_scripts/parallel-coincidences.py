@@ -65,10 +65,12 @@ def process_single_file(file_path, output_dir, time_windows):
         
         # Load and prepare data
         df = pd.read_csv(file_path, delimiter=';', parse_dates=['fecha_completa'])
+        print(f"Loaded {len(df)} records of date {date_str}")
         df['tipoacceso'] = df['tipoacceso'].str.strip()
         df['torniquete'] = df['porteria_detalle'].apply(lambda x: x.split('-')[0])
         
         # Find coincidences
+        print("Finding coincidences for date {date_str}")
         coincidences = find_coincidences(df, time_windows)
         
         # Save results for each time window
