@@ -158,6 +158,18 @@ class NetworkAggregator:
             
         return total_df if total_df is not None else pd.DataFrame(columns=['Carnet1', 'Carnet2', 'total_coincidences', 'same_turnstile_coincidences'])
     
+    def get_files_for_window(self, window):
+        """Get files for a specific time window, respecting test mode if enabled"""
+        files = list(self.coincidences_path.glob(f"coincidences_*_window{window}s.csv"))
+        
+        if self.test_mode:
+            # Randomly sample files in test mode
+            if len(files) > self.test_files:
+                files = random.sample(files, self.test_files)
+            self.logger.info(f"Test mode: selected {len(files)} files for window {window}s")
+            
+        return files
+
     def process_window(self, window):
         """Process a single time window with chunking"""
         start_time = time.time()
