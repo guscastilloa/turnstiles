@@ -219,7 +219,7 @@ def process_window(self, window):
         'processing_time': elapsed_time
     }
     
-    def process_all_windows_parallel(self, windows=[3, 4, 5, 6, 7]):
+def process_all_windows_parallel(self, windows=[3, 4, 5, 6, 7]):
         """Process all time windows in parallel"""
         n_processes = min(len(windows), cpu_count() - 1)  # Leave one CPU free
         self.logger.info(f"Starting parallel processing with {n_processes} processes")
