@@ -82,6 +82,91 @@ class NetworkAggregator:
         mem_usage = process.memory_info().rss / 1024 / 1024  # in MB
         self.logger.info(f"Current memory usage: {mem_usage:.2f} MB")
     
+    def process_file(self, file_path):
+        """Process a single coincidence file with error handling"""
+        try:
+            df = pd.read_csv(file_path)
+            if df.empty:
+                self.logger.warning(f"Empty file: {file_path}")
+                return None
+            return df
+        except pd.errors.EmptyDataError:
+            self.logger.warning(f"Empty file: {file_path}")
+            return None
+        except Exception as e:
+            self.logger.error(f"Error processing {file_path}: {str(e)}")
+            return None
+            
+    def process_chunk_of_files(self, files, window, chunk_idx, n_chunks):
+        """Process a subset of files and save intermediate results"""
+        edge_weights = {}
+        files_processed = 0
+        successful_files = 0
+        
+        self.logger.info(f"Processing chunk {chunk_idx}/{n_chunks} with {len(files)} files")
+        self.log_memory_usage()
+        
+        for file in tqdm(files, desc=f"Chunk {chunk_idx}"):
+            df = self.process_file(file)
+            if df is not None:
+                for _, row in df.iterrows():
+                    edge = tuple(sorted([str(row['Carnet1']), str(row['Carnet2'])]))
+                    if edge not in edge_weights:
+                        edge_weights[edge] = {'total': 0, 'same_turnstile': 0}
+                    edge_weights[edge]['total'] += row['total_coincidences']
+                    edge_weights[edge]['same_turnstile'] += row['same_turnstile_coincidences']
+                successful_files += 1
+            
+            files_processed += 1
+            if files_processed % 10 == 0:
+                self.logger.info(f"Processed {files_processed}/{len(files)} files ({successful_files} successful)")
+                self.log_memory_usage()
+                
+        # Save intermediate results
+        if edge_weights:
+            temp_file = self.temp_path / f"intermediate_{window}s_chunk_{chunk_idx}.csv"
+            pd.DataFrame([
+                {
+                    'Carnet1': edge[0],
+                    'Carnet2': edge[1],
+                    'total_coincidences': data['total'],
+                    'same_turnstile_coincidences': data['same_turnstile']
+                }
+                for edge, data in edge_weights.items()
+            ]).to_csv(temp_file, index=False)
+            
+            self.logger.info(f"Saved intermediate results with {len(edge_weights)} edges to {temp_file}")
+        
+        # Clear memory
+        del edge_weights
+        gc.collect()
+        
+    def merge_intermediate_files(self, window):
+        """Merge all intermediate files for a window"""
+        intermediate_files = list(self.temp_path.glob(f"intermediate_{window}s_chunk_*.csv"))
+        
+        if not intermediate_files:
+            self.logger.warning(f"No intermediate files found for window {window}s")
+            return pd.DataFrame(columns=['Carnet1', 'Carnet2', 'total_coincidences', 'same_turnstile_coincidences'])
+            
+        self.logger.info(f"Merging {len(intermediate_files)} intermediate files")
+        
+        # Read and aggregate all intermediate files
+        total_df = None
+        for file in tqdm(intermediate_files, desc="Merging chunks"):
+            chunk_df = pd.read_csv(file)
+            if total_df is None:
+                total_df = chunk_df
+            else:
+                # Merge and aggregate
+                total_df = pd.concat([total_df, chunk_df]).groupby(['Carnet1', 'Carnet2']).sum().reset_index()
+            
+            # Remove intermediate file
+            file.unlink()
+            
+        return total_df if total_df is not None else pd.DataFrame(columns=['Carnet1', 'Carnet2', 'total_coincidences', 'same_turnstile_coincidences'])
+
+    
     def get_files_for_window(self, window):
         """Get files for a specific time window, respecting test mode if enabled"""
         files = list(self.coincidences_path.glob(f"coincidences_*_window{window}s.csv"))
@@ -93,68 +178,6 @@ class NetworkAggregator:
             self.logger.info(f"Test mode: selected {len(files)} files for window {window}s")
             
         return files
-    
-    def process_chunk_of_files(self, files, window, chunk_idx, n_chunks):
-        """Process a subset of files and save intermediate results"""
-        edge_weights = {}
-        files_processed = 0
-        
-        self.logger.info(f"Processing chunk {chunk_idx}/{n_chunks} with {len(files)} files")
-        self.log_memory_usage()
-        
-        for file in tqdm(files, desc=f"Chunk {chunk_idx}"):
-            try:
-                df = pd.read_csv(file)
-                for _, row in df.iterrows():
-                    edge = tuple(sorted([str(row['Carnet1']), str(row['Carnet2'])]))
-                    if edge not in edge_weights:
-                        edge_weights[edge] = {'total': 0, 'same_turnstile': 0}
-                    edge_weights[edge]['total'] += row['total_coincidences']
-                    edge_weights[edge]['same_turnstile'] += row['same_turnstile_coincidences']
-                
-                files_processed += 1
-                if files_processed % 100 == 0:
-                    self.log_memory_usage()
-                    
-            except Exception as e:
-                self.logger.error(f"Error processing {file}: {str(e)}")
-                continue
-        
-        # Save intermediate results
-        temp_file = self.temp_path / f"intermediate_{window}s_chunk_{chunk_idx}.parquet"
-        pd.DataFrame([
-            {
-                'Carnet1': edge[0],
-                'Carnet2': edge[1],
-                'total_coincidences': data['total'],
-                'same_turnstile_coincidences': data['same_turnstile']
-            }
-            for edge, data in edge_weights.items()
-        ]).to_parquet(temp_file)
-        
-        # Clear memory
-        del edge_weights
-        gc.collect()
-    
-    def merge_intermediate_files(self, window):
-        """Merge all intermediate files for a window"""
-        intermediate_files = list(self.temp_path.glob(f"intermediate_{window}s_chunk_*.parquet"))
-        
-        # Read and aggregate all intermediate files
-        total_df = None
-        for file in tqdm(intermediate_files, desc="Merging chunks"):
-            chunk_df = pd.read_parquet(file)
-            if total_df is None:
-                total_df = chunk_df
-            else:
-                # Merge and aggregate
-                total_df = pd.concat([total_df, chunk_df]).groupby(['Carnet1', 'Carnet2']).sum().reset_index()
-            
-            # Remove intermediate file
-            file.unlink()
-            
-        return total_df
-    
     def process_window(self, window, chunk_size=1000):
         """Process a single time window"""
         start_time = time.time()
