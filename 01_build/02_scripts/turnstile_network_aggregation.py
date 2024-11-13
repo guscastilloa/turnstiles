@@ -1,11 +1,17 @@
 # network_aggregator.py
 
-from pathlib import Path
 import pandas as pd
-from collections import defaultdict
+import numpy as np
+from pathlib import Path
 import logging
 from config import ProjectConfig, Phase
 import os
+from tqdm import tqdm
+import gc
+import psutil
+import time
+import random
+
 
 # Set up logging
 logging.basicConfig(
@@ -18,17 +24,25 @@ logging.basicConfig(
 )
 
 class NetworkAggregator:
-    def __init__(self, config: ProjectConfig):
+    def __init__(self, config: ProjectConfig, test_mode=False, test_files=100):
         """
-        Initialize the NetworkAggregator with project configuration
+        Initialize NetworkAggregator
         
         Parameters:
         -----------
         config : ProjectConfig
-            Project configuration object that manages paths
+            Project configuration object
+        test_mode : bool
+            If True, runs on a limited number of files for testing
+        test_files : int
+            Number of files to process in test mode
         """
         self.config = config
-        
+        self.test_mode = test_mode
+        self.test_files = test_files
+        self.setup_logging()
+        self.setup_paths()
+
         # Ensure we're in the right phase
         if self.config.phase != Phase.BUILD:
             raise ValueError("NetworkAggregator should be used in BUILD phase")
@@ -43,110 +57,76 @@ class NetworkAggregator:
         logging.info(f"Writing to: {self.networks_path}")
     
     def get_files_for_window(self, window):
-        """Get all coincidence files for a specific time window"""
-        pattern = f"coincidences_*_window{window}s.csv"
-        files = list(self.coincidences_path.glob(pattern))
-        logging.info(f"Found {len(files)} files for {window}s window")
+        """Get files for a specific time window, respecting test mode if enabled"""
+        files = list(self.coincidences_path.glob(f"coincidences_*_window{window}s.csv"))
+        
+        if self.test_mode:
+            # Randomly sample files in test mode
+            if len(files) > self.test_files:
+                files = random.sample(files, self.test_files)
+            self.logger.info(f"Test mode: selected {len(files)} files for window {window}s")
+            
         return files
-    
-    def aggregate_window(self, window, chunk_size=1000):
-        """
-        Aggregate all files for a specific time window
-        Uses chunking to handle large datasets efficiently
-        """
+        
+    def process_window(self, window, chunk_size=1000):
+        """Process a single time window"""
+        start_time = time.time()
         files = self.get_files_for_window(window)
         
-        # Initialize aggregation dictionaries
-        edge_weights = defaultdict(lambda: {'total': 0, 'same_turnstile': 0})
-        processed_files = 0
-        total_rows = 0
+        # Create a test-specific output directory if in test mode
+        if self.test_mode:
+            output_dir = self.networks_path / 'test_results'
+            output_dir.mkdir(exist_ok=True)
+        else:
+            output_dir = self.networks_path
+            
+        # Split files into chunks
+        n_chunks = max(1, len(files) // chunk_size)
+        file_chunks = np.array_split(files, n_chunks)
         
-        for file in files:
-            try:
-                # Process file in chunks to manage memory
-                for chunk in pd.read_csv(file, chunksize=chunk_size):
-                    for _, row in chunk.iterrows():
-                        # Create sorted tuple as unique edge identifier
-                        edge = tuple(sorted([str(row['Carnet1']), str(row['Carnet2'])]))
-                        edge_weights[edge]['total'] += row['total_coincidences']
-                        edge_weights[edge]['same_turnstile'] += row['same_turnstile_coincidences']
-                        total_rows += 1
-                
-                processed_files += 1
-                if processed_files % 100 == 0:
-                    logging.info(f"Processed {processed_files}/{len(files)} files for {window}s window")
-                    
-            except Exception as e:
-                logging.error(f"Error processing file {file}: {str(e)}")
-                continue
+        # Process each chunk
+        for i, chunk_files in enumerate(file_chunks, 1):
+            self.process_chunk_of_files(chunk_files, window, i, n_chunks)
+            
+        # Merge results
+        final_df = self.merge_intermediate_files(window)
         
-        # Convert to DataFrame
-        edges_df = pd.DataFrame([
-            {
-                'Carnet1': edge[0],
-                'Carnet2': edge[1],
-                'total_coincidences': data['total'],
-                'same_turnstile_coincidences': data['same_turnstile']
-            }
-            for edge, data in edge_weights.items()
-        ])
+        # Save results
+        output_file = output_dir / f"aggregated_network_{window}s.csv"
+        final_df.to_csv(output_file, index=False)
         
-        logging.info(f"Window {window}s aggregation complete:")
-        logging.info(f"Total edges: {len(edges_df)}")
-        logging.info(f"Total coincidences: {edges_df['total_coincidences'].sum()}")
+        elapsed_time = time.time() - start_time
+        self.logger.info(f"Window {window}s completed in {elapsed_time/3600:.2f} hours")
+        self.logger.info(f"Total edges: {len(final_df)}")
         
-        return edges_df
-    
-    def process_all_windows(self, windows=[3, 4, 5, 6, 7]):
-        """Process all time windows and save results"""
-        results = {}
-        
-        for window in windows:
-            logging.info(f"\nProcessing {window}s window...")
-            try:
-                network_df = self.aggregate_window(window)
-                
-                # Save aggregated network
-                output_file = self.networks_path / f"aggregated_network_{window}s.csv"
-                network_df.to_csv(output_file, index=False)
-                
-                results[window] = {
-                    'edges': len(network_df),
-                    'total_coincidences': network_df['total_coincidences'].sum(),
-                    'same_turnstile': network_df['same_turnstile_coincidences'].sum()
-                }
-                
-                logging.info(f"Saved network to {output_file}")
-                
-            except Exception as e:
-                logging.error(f"Error processing {window}s window: {str(e)}")
-                continue
-        
-        # Save summary statistics
-        summary_df = pd.DataFrame.from_dict(results, orient='index')
-        summary_df.to_csv(self.networks_path / 'network_summary_statistics.csv')
-        
-        logging.info("\nAggregation complete!")
-        return results
+        return {
+            'edges': len(final_df),
+            'total_coincidences': final_df['total_coincidences'].sum(),
+            'same_turnstile': final_df['same_turnstile_coincidences'].sum()
+        }
 
 def main():
-    """Main execution function"""
-    # Initialize configuration for build phase
+    # Add argument parsing for test mode
+    import argparse
+    parser = argparse.ArgumentParser(description='Aggregate network data from coincidence files')
+    parser.add_argument('--test', action='store_true', help='Run in test mode')
+    parser.add_argument('--test-files', type=int, default=100, help='Number of files to process in test mode')
+    args = parser.parse_args()
+    
     config = ProjectConfig(phase=Phase.BUILD)
-    
-    # Create aggregator
-    aggregator = NetworkAggregator(config)
-    
-    # Process all windows
+    aggregator = NetworkAggregator(config, test_mode=args.test, test_files=args.test_files)
     results = aggregator.process_all_windows()
     
-    # Print final summary
-    print("\nFinal Summary:")
-    for window, stats in results.items():
-        print(f"\n{window}s window:")
-        print(f"  Edges: {stats['edges']:,}")
-        print(f"  Total coincidences: {stats['total_coincidences']:,}")
-        print(f"  Same turnstile coincidences: {stats['same_turnstile']:,}")
+    # Save summary
+    summary_df = pd.DataFrame.from_dict(results, orient='index')
+    
+    # Save to test-specific directory if in test mode
+    if args.test:
+        output_dir = Path(aggregator.networks_path) / 'test_results'
+        output_dir.mkdir(exist_ok=True)
+        summary_df.to_csv(output_dir / 'network_summary_statistics.csv')
+    else:
+        summary_df.to_csv(aggregator.networks_path / 'network_summary_statistics.csv')
 
 if __name__ == "__main__":
     main()
