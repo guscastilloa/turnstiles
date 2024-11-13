@@ -183,7 +183,7 @@ class NetworkAggregator:
             output_dir = self.networks_path
             
         # Split files into chunks
-        chunk_size = 100  # Adjust chunk size based on memory usage
+        chunk_size = 200  # Adjust chunk size based on memory usage
         n_chunks = max(1, len(files) // chunk_size)
         file_chunks = np.array_split(files, n_chunks)
         
