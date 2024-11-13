@@ -132,6 +132,31 @@ class NetworkAggregator:
         # Clear memory
         del edge_weights
         gc.collect()
+    def process_all_windows_parallel(self, windows=[3, 4, 5, 6, 7]):
+        """Process all time windows in parallel"""
+        n_processes = min(len(windows), cpu_count() - 1)  # Leave one CPU free
+        self.logger.info(f"Starting parallel processing with {n_processes} processes")
+        
+        start_time = time.time()
+        
+        with Pool(processes=n_processes) as pool:
+            results = pool.map(self.process_window, windows)
+            
+        # Convert results to DataFrame
+        results_df = pd.DataFrame(results).set_index('window')
+        
+        # Save summary statistics
+        if self.test_mode:
+            output_dir = self.networks_path / 'test_results'
+            output_dir.mkdir(exist_ok=True)
+            results_df.to_csv(output_dir / 'network_summary_statistics.csv')
+        else:
+            results_df.to_csv(self.networks_path / 'network_summary_statistics.csv')
+        
+        total_time = time.time() - start_time
+        self.logger.info(f"Total processing time: {total_time/3600:.2f} hours")
+        
+        return results_df
         
     def merge_intermediate_files(self, window):
         """Merge all intermediate files for a window"""
@@ -219,31 +244,6 @@ def process_window(self, window):
         'processing_time': elapsed_time
     }
     
-def process_all_windows_parallel(self, windows=[3, 4, 5, 6, 7]):
-        """Process all time windows in parallel"""
-        n_processes = min(len(windows), cpu_count() - 1)  # Leave one CPU free
-        self.logger.info(f"Starting parallel processing with {n_processes} processes")
-        
-        start_time = time.time()
-        
-        with Pool(processes=n_processes) as pool:
-            results = pool.map(self.process_window, windows)
-            
-        # Convert results to DataFrame
-        results_df = pd.DataFrame(results).set_index('window')
-        
-        # Save summary statistics
-        if self.test_mode:
-            output_dir = self.networks_path / 'test_results'
-            output_dir.mkdir(exist_ok=True)
-            results_df.to_csv(output_dir / 'network_summary_statistics.csv')
-        else:
-            results_df.to_csv(self.networks_path / 'network_summary_statistics.csv')
-        
-        total_time = time.time() - start_time
-        self.logger.info(f"Total processing time: {total_time/3600:.2f} hours")
-        
-        return results_df
 
 def main():
     # Add argument parsing for test mode
