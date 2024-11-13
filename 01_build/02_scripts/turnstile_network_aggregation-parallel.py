@@ -132,6 +132,55 @@ class NetworkAggregator:
         # Clear memory
         del edge_weights
         gc.collect()
+    def process_window(self, window):
+        """Process a single time window with optimized chunking"""
+        start_time = time.time()
+        files = self.get_files_for_window(window)
+        
+        # Create a test-specific output directory if in test mode
+        if self.test_mode:
+            output_dir = self.networks_path / 'test_results'
+            output_dir.mkdir(exist_ok=True)
+        else:
+            output_dir = self.networks_path
+            
+        # Dynamic chunk size calculation
+        total_files = len(files)
+        if self.test_mode:
+            # For test mode, use smaller chunks
+            chunk_size = min(20, max(5, total_files // 10))
+        else:
+            # For production, aim for 50-100 chunks total
+            chunk_size = max(100, total_files // 50)
+        
+        n_chunks = max(1, total_files // chunk_size)
+        file_chunks = np.array_split(files, n_chunks)
+        
+        self.logger.info(f"Processing {total_files} files in {n_chunks} chunks of ~{chunk_size} files each")
+        
+        # Process each chunk
+        for i, chunk_files in enumerate(file_chunks, 1):
+            self.process_chunk_of_files(chunk_files, window, i, n_chunks)
+            
+        # Merge results
+        self.logger.info(f"Merging all chunks for window {window}s")
+        final_df = self.merge_intermediate_files(window)
+        
+        # Save results
+        output_file = output_dir / f"aggregated_network_{window}s.csv"
+        final_df.to_csv(output_file, index=False)
+        
+        elapsed_time = time.time() - start_time
+        self.logger.info(f"Window {window}s completed in {elapsed_time/3600:.2f} hours")
+        
+        return {
+            'window': window,
+            'edges': len(final_df),
+            'total_coincidences': final_df['total_coincidences'].sum(),
+            'same_turnstile': final_df['same_turnstile_coincidences'].sum(),
+            'processing_time': elapsed_time
+        }
+        
     def process_all_windows_parallel(self, windows=[3, 4, 5, 6, 7]):
         """Process all time windows in parallel"""
         n_processes = min(len(windows), cpu_count() - 1)  # Leave one CPU free
@@ -195,55 +244,6 @@ class NetworkAggregator:
             
         return files
 
-def process_window(self, window):
-    """Process a single time window with optimized chunking"""
-    start_time = time.time()
-    files = self.get_files_for_window(window)
-    
-    # Create a test-specific output directory if in test mode
-    if self.test_mode:
-        output_dir = self.networks_path / 'test_results'
-        output_dir.mkdir(exist_ok=True)
-    else:
-        output_dir = self.networks_path
-        
-    # Dynamic chunk size calculation
-    total_files = len(files)
-    if self.test_mode:
-        # For test mode, use smaller chunks
-        chunk_size = min(20, max(5, total_files // 10))
-    else:
-        # For production, aim for 50-100 chunks total
-        chunk_size = max(100, total_files // 50)
-    
-    n_chunks = max(1, total_files // chunk_size)
-    file_chunks = np.array_split(files, n_chunks)
-    
-    self.logger.info(f"Processing {total_files} files in {n_chunks} chunks of ~{chunk_size} files each")
-    
-    # Process each chunk
-    for i, chunk_files in enumerate(file_chunks, 1):
-        self.process_chunk_of_files(chunk_files, window, i, n_chunks)
-        
-    # Merge results
-    self.logger.info(f"Merging all chunks for window {window}s")
-    final_df = self.merge_intermediate_files(window)
-    
-    # Save results
-    output_file = output_dir / f"aggregated_network_{window}s.csv"
-    final_df.to_csv(output_file, index=False)
-    
-    elapsed_time = time.time() - start_time
-    self.logger.info(f"Window {window}s completed in {elapsed_time/3600:.2f} hours")
-    
-    return {
-        'window': window,
-        'edges': len(final_df),
-        'total_coincidences': final_df['total_coincidences'].sum(),
-        'same_turnstile': final_df['same_turnstile_coincidences'].sum(),
-        'processing_time': elapsed_time
-    }
-    
 
 def main():
     # Add argument parsing for test mode
