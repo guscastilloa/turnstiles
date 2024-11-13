@@ -5,6 +5,10 @@
 # gitignore template for Jupyter Notebooks
 # website: http://jupyter.org/
 
+### Stored files ####
+01_build/03_output/Daily/P2000_*
+01_build/03_output/Coincidences/coincidences_*
+
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
