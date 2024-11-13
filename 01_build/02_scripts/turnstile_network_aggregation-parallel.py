@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -244,24 +245,101 @@ class NetworkAggregator:
             
         return files
 
+    def process_single_window(self, window):
+        """Process a single time window"""
+        start_time = time.time()
+        self.logger.info(f"\nProcessing window size: {window} seconds")
+        
+        try:
+            files = self.get_files_for_window(window)
+            self.logger.info(f"Found {len(files)} files to process")
+            
+            # Create appropriate output directory
+            if self.test_mode:
+                output_dir = self.networks_path / 'test_results'
+                output_dir.mkdir(exist_ok=True)
+            else:
+                output_dir = self.networks_path
+            
+            # Dynamic chunk size calculation
+            total_files = len(files)
+            if self.test_mode:
+                chunk_size = min(20, max(5, total_files // 10))
+            else:
+                chunk_size = max(100, total_files // 50)
+            
+            n_chunks = max(1, total_files // chunk_size)
+            file_chunks = np.array_split(files, n_chunks)
+            
+            self.logger.info(f"Processing {total_files} files in {n_chunks} chunks")
+            
+            # Process chunks
+            for i, chunk_files in enumerate(file_chunks, 1):
+                self.process_chunk_of_files(chunk_files, window, i, n_chunks)
+            
+            # Merge results
+            self.logger.info(f"Merging chunks for window {window}s")
+            final_df = self.merge_intermediate_files(window)
+            
+            # Save results
+            output_file = output_dir / f"aggregated_network_{window}s.csv"
+            final_df.to_csv(output_file, index=False)
+            
+            # Calculate statistics
+            stats = {
+                'window': window,
+                'edges': len(final_df),
+                'total_coincidences': final_df['total_coincidences'].sum(),
+                'same_turnstile': final_df['same_turnstile_coincidences'].sum(),
+                'processing_time': time.time() - start_time
+            }
+            
+            # Save window-specific statistics
+            stats_df = pd.DataFrame([stats])
+            stats_file = output_dir / f"network_statistics_{window}s.csv"
+            stats_df.to_csv(stats_file, index=False)
+            
+            self.logger.info(f"Window {window}s processing completed in {stats['processing_time']/3600:.2f} hours")
+            self.logger.info(f"Total edges: {stats['edges']}")
+            
+            return stats
+            
+        except Exception as e:
+            self.logger.error(f"Error processing window {window}s: {str(e)}")
+            raise
+
 
 def main():
     # Add argument parsing for test mode
     parser = argparse.ArgumentParser(description='Aggregate network data from coincidence files')
+    parser.add_argument('--window', type=int, required=True, 
+                      help='Time window size in seconds (e.g., 3, 4, 5, 6, or 7)')
     parser.add_argument('--test', action='store_true', help='Run in test mode')
     parser.add_argument('--test-files', type=int, default=100, help='Number of files to process in test mode')
     args = parser.parse_args()
+    
+    # Validate window size
+    if args.window not in [3, 4, 5, 6, 7]:
+        raise ValueError("Window size must be 3, 4, 5, 6, or 7 seconds")
     
     # Initialize configuration and aggregator
     config = ProjectConfig(phase=Phase.BUILD)
     aggregator = NetworkAggregator(config, test_mode=args.test, test_files=args.test_files)
     
-    # Process all windows in parallel
-    results = aggregator.process_all_windows_parallel()
-    
-    # Print final summary
-    print("\nProcessing Summary:")
-    print(results)
+    try:
+        start_time = time.time()
+        stats = aggregator.process_single_window(args.window)
+        
+        print("\nProcessing Summary:")
+        print(f"Window size: {args.window} seconds")
+        print(f"Total edges: {stats['edges']:,}")
+        print(f"Total coincidences: {stats['total_coincidences']:,}")
+        print(f"Same turnstile coincidences: {stats['same_turnstile']:,}")
+        print(f"Processing time: {stats['processing_time']/3600:.2f} hours")
+        
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        sys.exit(1)
     
 if __name__ == "__main__":
     main()
