@@ -125,7 +125,7 @@ class NetworkAggregator:
         # Save intermediate results
         if edge_weights:
             temp_file = self.temp_path / f"intermediate_{window}s_chunk_{chunk_idx}.csv"
-            pd.DataFrame([
+            out_df = pd.DataFrame([
                 {
                     'Carnet1': edge[0],
                     'Carnet2': edge[1],
@@ -133,9 +133,10 @@ class NetworkAggregator:
                     'same_turnstile_coincidences': data['same_turnstile']
                 }
                 for edge, data in edge_weights.items()
-            ]).to_csv(temp_file, index=False)
+            ])
+            out_df.to_csv(temp_file, index=False)
             
-            self.logger.info(f"Saved intermediate results with {len(edge_weights)} edges to {temp_file}")
+            self.logger.info(f"Saved {out_df.shape} intermediate results with {len(edge_weights)} edges to {temp_file}")
         
         # Clear memory
         del edge_weights
