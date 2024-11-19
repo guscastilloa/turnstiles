@@ -170,7 +170,7 @@ class CoincidenceProcessor:
 
 def main():
     parser = argparse.ArgumentParser(description='Process turnstile coincidences in parallel')
-    parser.add_argument('--window', type=int, choices=[3,4,5,6,7], required=True,
+    parser.add_argument('--window', type=int, choices=[2,3,4,5,6,7], required=True,
                       help='Time window (in seconds) to process')
     parser.add_argument('--test', action='store_true', 
                       help='Run in test mode with sample data')
