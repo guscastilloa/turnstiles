@@ -9,6 +9,7 @@
 01_build/03_output/Daily/P2000_*
 01_build/03_output/Coincidences/coincidences_*
 
+*.pkl
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
 
