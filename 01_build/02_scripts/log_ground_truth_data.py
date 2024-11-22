@@ -1,6 +1,5 @@
 import os
 import sys
-print(f"epaaa: {sys.path}")
 import pandas as pd
 from config import ProjectConfig, Phase
 import logging
@@ -8,7 +7,6 @@ import logging
 
 def log_ground_truth_data():
     # Initialize configuration for BUILD phase
-    
     config = ProjectConfig(phase=Phase.BUILD)
     
     # Set up paths using config
@@ -54,8 +52,12 @@ def log_ground_truth_data():
         try:
             data = pd.read_pickle(file_path, compression='gzip')
             logging.info(f"Shape: {data.shape}")
-            logging.info(f"Columns: {data.columns.tolist()}")
-            logging.info(f"Dtypes: {data.dtypes.to_dict()}")
+            logging.info("Columns:")
+            for column in data.columns:
+                logging.info(f"  - {column}")
+            logging.info("Dtypes:")
+            for col, dtype in data.dtypes.items():
+                logging.info(f"  - {col}: {dtype}")
         except Exception as e:
             logging.error(f"Error: {str(e)}")
         
@@ -63,3 +65,4 @@ def log_ground_truth_data():
 
 if __name__ == "__main__":
     log_ground_truth_data()
+
