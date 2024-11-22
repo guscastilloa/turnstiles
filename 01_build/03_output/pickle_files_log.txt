@@ -1,96 +1,662 @@
 
 ========================================
 File Name: carnets_civil20182.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_civil20182.pkl'
+Shape: (70, 1)
+Columns:
+  - CARNET
+Dtypes:
+  - CARNET: int64
 ========================================
 
 
 ========================================
 File Name: interacciones_economia20172.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_economia20172.pkl'
+Shape: (8609, 32)
+Columns:
+  - AnonID_x
+  - fecha_completa_x
+  - AnonID_y
+  - fecha_completa_y
+  - tipoacceso
+  - n_diasemana
+  - entrada
+  - diff
+  - d_5s
+  - d_3s
+  - d_2s
+  - d_Amistad
+  - d_Casa
+  - d_Trabajos
+  - estrato_x
+  - lowinc_x
+  - midinc_x
+  - highinc_x
+  - ciudad_x
+  - sexo_x
+  - cum_gpa_x
+  - programa_x
+  - first_term_x
+  - estrato_y
+  - lowinc_y
+  - midinc_y
+  - highinc_y
+  - ciudad_y
+  - sexo_y
+  - cum_gpa_y
+  - programa_y
+  - first_term_y
+Dtypes:
+  - AnonID_x: object
+  - fecha_completa_x: datetime64[ns]
+  - AnonID_y: object
+  - fecha_completa_y: datetime64[ns]
+  - tipoacceso: int64
+  - n_diasemana: int64
+  - entrada: object
+  - diff: float64
+  - d_5s: int64
+  - d_3s: int64
+  - d_2s: int64
+  - d_Amistad: float64
+  - d_Casa: float64
+  - d_Trabajos: float64
+  - estrato_x: float32
+  - lowinc_x: float32
+  - midinc_x: float32
+  - highinc_x: float32
+  - ciudad_x: object
+  - sexo_x: object
+  - cum_gpa_x: float32
+  - programa_x: object
+  - first_term_x: float64
+  - estrato_y: float32
+  - lowinc_y: float32
+  - midinc_y: float32
+  - highinc_y: float32
+  - ciudad_y: object
+  - sexo_y: object
+  - cum_gpa_y: float32
+  - programa_y: object
+  - first_term_y: float64
 ========================================
 
 
 ========================================
 File Name: carnets_economia20172.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_economia20172.pkl'
+Shape: (76, 1)
+Columns:
+  - CARNET
+Dtypes:
+  - CARNET: int64
 ========================================
 
 
 ========================================
 File Name: interacciones_civil20182.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_civil20182.pkl'
+Shape: (5034, 32)
+Columns:
+  - AnonID_x
+  - fecha_completa_x
+  - AnonID_y
+  - fecha_completa_y
+  - tipoacceso
+  - n_diasemana
+  - entrada
+  - diff
+  - d_5s
+  - d_3s
+  - d_2s
+  - d_Amistad
+  - d_Casa
+  - d_Trabajos
+  - estrato_x
+  - lowinc_x
+  - midinc_x
+  - highinc_x
+  - ciudad_x
+  - sexo_x
+  - cum_gpa_x
+  - programa_x
+  - first_term_x
+  - estrato_y
+  - lowinc_y
+  - midinc_y
+  - highinc_y
+  - ciudad_y
+  - sexo_y
+  - cum_gpa_y
+  - programa_y
+  - first_term_y
+Dtypes:
+  - AnonID_x: object
+  - fecha_completa_x: datetime64[ns]
+  - AnonID_y: object
+  - fecha_completa_y: datetime64[ns]
+  - tipoacceso: int64
+  - n_diasemana: int64
+  - entrada: object
+  - diff: float64
+  - d_5s: int64
+  - d_3s: int64
+  - d_2s: int64
+  - d_Amistad: float64
+  - d_Casa: float64
+  - d_Trabajos: float64
+  - estrato_x: float32
+  - lowinc_x: float32
+  - midinc_x: float32
+  - highinc_x: float32
+  - ciudad_x: object
+  - sexo_x: object
+  - cum_gpa_x: float32
+  - programa_x: object
+  - first_term_x: float64
+  - estrato_y: float32
+  - lowinc_y: float32
+  - midinc_y: float32
+  - highinc_y: float32
+  - ciudad_y: object
+  - sexo_y: object
+  - cum_gpa_y: float32
+  - programa_y: object
+  - first_term_y: float64
 ========================================
 
 
 ========================================
 File Name: carnets_cpol20182.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_cpol20182.pkl'
+Shape: (42, 1)
+Columns:
+  - CARNET
+Dtypes:
+  - CARNET: int64
 ========================================
 
 
 ========================================
 File Name: interacciones_medicina20172.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_medicina20172.pkl'
+Shape: (7962, 32)
+Columns:
+  - AnonID_x
+  - fecha_completa_x
+  - AnonID_y
+  - fecha_completa_y
+  - tipoacceso
+  - n_diasemana
+  - entrada
+  - diff
+  - d_5s
+  - d_3s
+  - d_2s
+  - d_Amistad
+  - d_Casa
+  - d_Trabajos
+  - estrato_x
+  - lowinc_x
+  - midinc_x
+  - highinc_x
+  - ciudad_x
+  - sexo_x
+  - cum_gpa_x
+  - programa_x
+  - first_term_x
+  - estrato_y
+  - lowinc_y
+  - midinc_y
+  - highinc_y
+  - ciudad_y
+  - sexo_y
+  - cum_gpa_y
+  - programa_y
+  - first_term_y
+Dtypes:
+  - AnonID_x: object
+  - fecha_completa_x: datetime64[ns]
+  - AnonID_y: object
+  - fecha_completa_y: datetime64[ns]
+  - tipoacceso: int64
+  - n_diasemana: int64
+  - entrada: object
+  - diff: float64
+  - d_5s: int64
+  - d_3s: int64
+  - d_2s: int64
+  - d_Amistad: float64
+  - d_Casa: float64
+  - d_Trabajos: float64
+  - estrato_x: float32
+  - lowinc_x: float32
+  - midinc_x: float32
+  - highinc_x: float32
+  - ciudad_x: object
+  - sexo_x: object
+  - cum_gpa_x: float32
+  - programa_x: object
+  - first_term_x: float64
+  - estrato_y: float32
+  - lowinc_y: float32
+  - midinc_y: float32
+  - highinc_y: float32
+  - ciudad_y: object
+  - sexo_y: object
+  - cum_gpa_y: float32
+  - programa_y: object
+  - first_term_y: float64
 ========================================
 
 
 ========================================
 File Name: carnets_medicina20172.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_medicina20172.pkl'
+Shape: (56, 1)
+Columns:
+  - CARNET
+Dtypes:
+  - CARNET: int64
 ========================================
 
 
 ========================================
 File Name: interacciones_medicina20182.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_medicina20182.pkl'
+Shape: (5052, 32)
+Columns:
+  - AnonID_x
+  - fecha_completa_x
+  - AnonID_y
+  - fecha_completa_y
+  - tipoacceso
+  - n_diasemana
+  - entrada
+  - diff
+  - d_5s
+  - d_3s
+  - d_2s
+  - d_Amistad
+  - d_Casa
+  - d_Trabajos
+  - estrato_x
+  - lowinc_x
+  - midinc_x
+  - highinc_x
+  - ciudad_x
+  - sexo_x
+  - cum_gpa_x
+  - programa_x
+  - first_term_x
+  - estrato_y
+  - lowinc_y
+  - midinc_y
+  - highinc_y
+  - ciudad_y
+  - sexo_y
+  - cum_gpa_y
+  - programa_y
+  - first_term_y
+Dtypes:
+  - AnonID_x: object
+  - fecha_completa_x: datetime64[ns]
+  - AnonID_y: object
+  - fecha_completa_y: datetime64[ns]
+  - tipoacceso: int64
+  - n_diasemana: int64
+  - entrada: object
+  - diff: float64
+  - d_5s: int64
+  - d_3s: int64
+  - d_2s: int64
+  - d_Amistad: float64
+  - d_Casa: float64
+  - d_Trabajos: float64
+  - estrato_x: float32
+  - lowinc_x: float32
+  - midinc_x: float32
+  - highinc_x: float32
+  - ciudad_x: object
+  - sexo_x: object
+  - cum_gpa_x: float32
+  - programa_x: object
+  - first_term_x: float64
+  - estrato_y: float32
+  - lowinc_y: float32
+  - midinc_y: float32
+  - highinc_y: float32
+  - ciudad_y: object
+  - sexo_y: object
+  - cum_gpa_y: float32
+  - programa_y: object
+  - first_term_y: float64
 ========================================
 
 
 ========================================
 File Name: interacciones_cpol20182.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_cpol20182.pkl'
+Shape: (2027, 32)
+Columns:
+  - AnonID_x
+  - fecha_completa_x
+  - AnonID_y
+  - fecha_completa_y
+  - tipoacceso
+  - n_diasemana
+  - entrada
+  - diff
+  - d_5s
+  - d_3s
+  - d_2s
+  - d_Amistad
+  - d_Casa
+  - d_Trabajos
+  - estrato_x
+  - lowinc_x
+  - midinc_x
+  - highinc_x
+  - ciudad_x
+  - sexo_x
+  - cum_gpa_x
+  - programa_x
+  - first_term_x
+  - estrato_y
+  - lowinc_y
+  - midinc_y
+  - highinc_y
+  - ciudad_y
+  - sexo_y
+  - cum_gpa_y
+  - programa_y
+  - first_term_y
+Dtypes:
+  - AnonID_x: object
+  - fecha_completa_x: datetime64[ns]
+  - AnonID_y: object
+  - fecha_completa_y: datetime64[ns]
+  - tipoacceso: int64
+  - n_diasemana: int64
+  - entrada: object
+  - diff: float64
+  - d_5s: int64
+  - d_3s: int64
+  - d_2s: int64
+  - d_Amistad: float64
+  - d_Casa: float64
+  - d_Trabajos: float64
+  - estrato_x: float32
+  - lowinc_x: float32
+  - midinc_x: float32
+  - highinc_x: float32
+  - ciudad_x: object
+  - sexo_x: object
+  - cum_gpa_x: float32
+  - programa_x: object
+  - first_term_x: float64
+  - estrato_y: float32
+  - lowinc_y: float32
+  - midinc_y: float32
+  - highinc_y: float32
+  - ciudad_y: object
+  - sexo_y: object
+  - cum_gpa_y: float32
+  - programa_y: object
+  - first_term_y: float64
 ========================================
 
 
 ========================================
 File Name: interacciones_trust20172.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_trust20172.pkl'
+Shape: (19299, 35)
+Columns:
+  - AnonID_x
+  - fecha_completa_x
+  - AnonID_y
+  - fecha_completa_y
+  - tipoacceso
+  - n_diasemana
+  - entrada
+  - diff
+  - d_5s
+  - d_3s
+  - d_2s
+  - d_Confide
+  - d_Friends
+  - d_Lunch
+  - d_MetBefore
+  - d_Saludo
+  - d_Study
+  - estrato_x
+  - lowinc_x
+  - midinc_x
+  - highinc_x
+  - ciudad_x
+  - sexo_x
+  - cum_gpa_x
+  - programa_x
+  - first_term_x
+  - estrato_y
+  - lowinc_y
+  - midinc_y
+  - highinc_y
+  - ciudad_y
+  - sexo_y
+  - cum_gpa_y
+  - programa_y
+  - first_term_y
+Dtypes:
+  - AnonID_x: object
+  - fecha_completa_x: datetime64[ns]
+  - AnonID_y: object
+  - fecha_completa_y: datetime64[ns]
+  - tipoacceso: int64
+  - n_diasemana: int64
+  - entrada: object
+  - diff: float64
+  - d_5s: int64
+  - d_3s: int64
+  - d_2s: int64
+  - d_Confide: float64
+  - d_Friends: float64
+  - d_Lunch: float64
+  - d_MetBefore: float64
+  - d_Saludo: float64
+  - d_Study: float64
+  - estrato_x: float32
+  - lowinc_x: float32
+  - midinc_x: float32
+  - highinc_x: float32
+  - ciudad_x: object
+  - sexo_x: object
+  - cum_gpa_x: float32
+  - programa_x: object
+  - first_term_x: float64
+  - estrato_y: float32
+  - lowinc_y: float32
+  - midinc_y: float32
+  - highinc_y: float32
+  - ciudad_y: object
+  - sexo_y: object
+  - cum_gpa_y: float32
+  - programa_y: object
+  - first_term_y: float64
 ========================================
 
 
 ========================================
 File Name: carnets_medicina20182.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_medicina20182.pkl'
+Shape: (56, 1)
+Columns:
+  - CARNET
+Dtypes:
+  - CARNET: int64
 ========================================
 
 
 ========================================
 File Name: interacciones_civil20172.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_civil20172.pkl'
+Shape: (4205, 32)
+Columns:
+  - AnonID_x
+  - fecha_completa_x
+  - AnonID_y
+  - fecha_completa_y
+  - tipoacceso
+  - n_diasemana
+  - entrada
+  - diff
+  - d_5s
+  - d_3s
+  - d_2s
+  - d_Amistad
+  - d_Casa
+  - d_Trabajos
+  - estrato_x
+  - lowinc_x
+  - midinc_x
+  - highinc_x
+  - ciudad_x
+  - sexo_x
+  - cum_gpa_x
+  - programa_x
+  - first_term_x
+  - estrato_y
+  - lowinc_y
+  - midinc_y
+  - highinc_y
+  - ciudad_y
+  - sexo_y
+  - cum_gpa_y
+  - programa_y
+  - first_term_y
+Dtypes:
+  - AnonID_x: object
+  - fecha_completa_x: datetime64[ns]
+  - AnonID_y: object
+  - fecha_completa_y: datetime64[ns]
+  - tipoacceso: int64
+  - n_diasemana: int64
+  - entrada: object
+  - diff: float64
+  - d_5s: int64
+  - d_3s: int64
+  - d_2s: int64
+  - d_Amistad: float64
+  - d_Casa: float64
+  - d_Trabajos: float64
+  - estrato_x: float32
+  - lowinc_x: float32
+  - midinc_x: float32
+  - highinc_x: float32
+  - ciudad_x: object
+  - sexo_x: object
+  - cum_gpa_x: float32
+  - programa_x: object
+  - first_term_x: float64
+  - estrato_y: float32
+  - lowinc_y: float32
+  - midinc_y: float32
+  - highinc_y: float32
+  - ciudad_y: object
+  - sexo_y: object
+  - cum_gpa_y: float32
+  - programa_y: object
+  - first_term_y: float64
 ========================================
 
 
 ========================================
 File Name: interacciones_economia20182.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_economia20182.pkl'
+Shape: (7536, 32)
+Columns:
+  - AnonID_x
+  - fecha_completa_x
+  - AnonID_y
+  - fecha_completa_y
+  - tipoacceso
+  - n_diasemana
+  - entrada
+  - diff
+  - d_5s
+  - d_3s
+  - d_2s
+  - d_Amistad
+  - d_Casa
+  - d_Trabajos
+  - estrato_x
+  - lowinc_x
+  - midinc_x
+  - highinc_x
+  - ciudad_x
+  - sexo_x
+  - cum_gpa_x
+  - programa_x
+  - first_term_x
+  - estrato_y
+  - lowinc_y
+  - midinc_y
+  - highinc_y
+  - ciudad_y
+  - sexo_y
+  - cum_gpa_y
+  - programa_y
+  - first_term_y
+Dtypes:
+  - AnonID_x: object
+  - fecha_completa_x: datetime64[ns]
+  - AnonID_y: object
+  - fecha_completa_y: datetime64[ns]
+  - tipoacceso: int64
+  - n_diasemana: int64
+  - entrada: object
+  - diff: float64
+  - d_5s: int64
+  - d_3s: int64
+  - d_2s: int64
+  - d_Amistad: float64
+  - d_Casa: float64
+  - d_Trabajos: float64
+  - estrato_x: float32
+  - lowinc_x: float32
+  - midinc_x: float32
+  - highinc_x: float32
+  - ciudad_x: object
+  - sexo_x: object
+  - cum_gpa_x: float32
+  - programa_x: object
+  - first_term_x: float64
+  - estrato_y: float32
+  - lowinc_y: float32
+  - midinc_y: float32
+  - highinc_y: float32
+  - ciudad_y: object
+  - sexo_y: object
+  - cum_gpa_y: float32
+  - programa_y: object
+  - first_term_y: float64
 ========================================
 
 
 ========================================
 File Name: carnets_trust20172.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_trust20172.pkl'
+Shape: (113, 1)
+Columns:
+  - CARNET
+Dtypes:
+  - CARNET: int64
 ========================================
 
 
 ========================================
 File Name: carnets_economia20182.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_economia20182.pkl'
+Shape: (76, 1)
+Columns:
+  - CARNET
+Dtypes:
+  - CARNET: int64
 ========================================
 
 
 ========================================
 File Name: carnets_civil20172.pkl
-Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_civil20172.pkl'
+Shape: (70, 1)
+Columns:
+  - CARNET
+Dtypes:
+  - CARNET: int64
 ========================================
 
