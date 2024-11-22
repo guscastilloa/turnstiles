@@ -1,0 +1,96 @@
+
+========================================
+File Name: carnets_civil20182.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_civil20182.pkl'
+========================================
+
+
+========================================
+File Name: interacciones_economia20172.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_economia20172.pkl'
+========================================
+
+
+========================================
+File Name: carnets_economia20172.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_economia20172.pkl'
+========================================
+
+
+========================================
+File Name: interacciones_civil20182.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_civil20182.pkl'
+========================================
+
+
+========================================
+File Name: carnets_cpol20182.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_cpol20182.pkl'
+========================================
+
+
+========================================
+File Name: interacciones_medicina20172.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_medicina20172.pkl'
+========================================
+
+
+========================================
+File Name: carnets_medicina20172.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_medicina20172.pkl'
+========================================
+
+
+========================================
+File Name: interacciones_medicina20182.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_medicina20182.pkl'
+========================================
+
+
+========================================
+File Name: interacciones_cpol20182.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_cpol20182.pkl'
+========================================
+
+
+========================================
+File Name: interacciones_trust20172.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_trust20172.pkl'
+========================================
+
+
+========================================
+File Name: carnets_medicina20182.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_medicina20182.pkl'
+========================================
+
+
+========================================
+File Name: interacciones_civil20172.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_civil20172.pkl'
+========================================
+
+
+========================================
+File Name: interacciones_economia20182.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/interacciones_economia20182.pkl'
+========================================
+
+
+========================================
+File Name: carnets_trust20172.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_trust20172.pkl'
+========================================
+
+
+========================================
+File Name: carnets_economia20182.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_economia20182.pkl'
+========================================
+
+
+========================================
+File Name: carnets_civil20172.pkl
+Error: [Errno 2] No such file or directory: '/hpcfs/home/economia/ga.castillo/projects/TOR/turnstiles/01_build/01_input/Interacciones Encuestas/carnets_civil20172.pkl'
+========================================
+
