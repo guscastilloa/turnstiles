@@ -9,9 +9,14 @@
 01_build/03_output/Daily/P2000_*
 01_build/03_output/Coincidences/coincidences_*
 
+
+# Data Files 
 *.pkl
+*.csv
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
+
+
 
 # IPython
 profile_default/
