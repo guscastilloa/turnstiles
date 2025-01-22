@@ -82,6 +82,7 @@ def create_publication_summary(df):
     
     for semester in semester_patterns.index.get_level_values('semester').unique():
         data = semester_patterns.xs(semester, level='semester')
+        data.columns = [f'{semester} IN', f'{semester} OUT']
         data.plot(ax=ax1, label=f'{semester}', marker='o', linestyle='-')
     
     ax1.set_title('Average Daily Patterns by Semester')
