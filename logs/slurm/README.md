@@ -1,1 +1,1 @@
-place SLURM job logs here
+Place SLURM job logs here. They are gitignored.
