@@ -1,0 +1,7 @@
+paths:
+  base: "./turnstiles"
+
+compute:
+  max_workers: 6  # Limit for M1 MacBook
+  memory_limit: "6GB"  # Safe limit for 8GB RAM
+  chunk_size: 100000  # Smaller chunks for local testing
