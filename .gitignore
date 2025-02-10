@@ -5,6 +5,26 @@
 # gitignore template for Jupyter Notebooks
 # website: http://jupyter.org/
 
+##### DIRECTORIES ######
+# Data
+data/raw/*
+data/processed/*
+data/interim/*
+!data/*/README.md
+
+# Results
+results/models/*
+results/predictions/*
+!results/*/README.md
+
+# Logs
+logs/slurm/*
+logs/application/*
+!logs/*/README.md
+
+#######################
+
+
 ### Stored files ####
 01_build/03_output/Daily/P2000_*
 01_build/03_output/Coincidences/coincidences_*
