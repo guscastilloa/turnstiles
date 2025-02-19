@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=anon_id_map    # Job name
 #SBATCH --output=logs/slurm/anon_id_map_%j.log   # Output file (%j = job ID)
-#SBATCH --error=logs/anon_id_map_%j.err    # Error file
+#SBATCH --error=logs/slurm/anon_id_map_%j.err    # Error file
 #SBATCH --nodes=1                   # Run on a single node
 #SBATCH --ntasks=1                  # Run a single task
 #SBATCH --cpus-per-task=4          #
@@ -15,6 +15,7 @@ echo "Job started at: $(date)"
 
 # Define Paths
 HOME_DIR="/hpcfs/home/economia/ga.castillo"
+PROJECT_DIR="$HOME_DIR/projects/TOR"
 TURNSTILES_DIR="$PROJECT_DIR/turnstiles"
 DATA_DIR="$TURNSTILES_DIR/data"
 OUTPUT_DIR="$DATA_DIR/processed"
