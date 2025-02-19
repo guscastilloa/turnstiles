@@ -104,7 +104,7 @@ def main():
     
     # Traiter chaque source de données
     process_turnstile_data(mapper, 
-                           input_dir.parent / "intermediate", 
+                           input_dir.parent / "intermediate/daily", 
                            root_dir / "tests/data")
     process_survey_data(mapper, input_dir, output_dir / "survey")
     process_trust_data(mapper, input_dir, output_dir / "trust")
