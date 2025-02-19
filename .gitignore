@@ -325,3 +325,4 @@ tags
 
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,r,python,jupyternotebooks
+config/secure/salt.key
