@@ -103,7 +103,9 @@ def main():
     mapper = IDMapper(salt_path)
     
     # Traiter chaque source de données
-    #process_turnstile_data(mapper, input_dir.parent / "intermediate", output_dir / "turnstile")
+    process_turnstile_data(mapper, 
+                           input_dir.parent / "intermediate", 
+                           root_dir / "tests/data")
     process_survey_data(mapper, input_dir, output_dir / "survey")
     process_trust_data(mapper, input_dir, output_dir / "trust")
     
