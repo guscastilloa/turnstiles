@@ -21,6 +21,8 @@ def setup_logging():
 
 def process_turnstile_data(mapper: IDMapper, input_dir: Path, output_dir: Path):
     """Treat all turnstile data files"""
+    first_file_written = False
+    
     for csv_file in glob.glob(str(input_dir / "P2000*.csv")):
         file_path = Path(csv_file)
         logging.info(f"Processing turnstile file: {file_path.name}")
@@ -33,8 +35,13 @@ def process_turnstile_data(mapper: IDMapper, input_dir: Path, output_dir: Path):
             df['carnet'] = df['carnet'].astype(str).apply(
                 lambda x: mapper.add_identifier(x, source='turnstile')
             )
-            output_file = output_dir / f"anon_{file_path.name}"
-            df.to_csv(output_file, index=False)
+            
+            # Only write first file
+            if not first_file_written:
+                output_file = output_dir / f"anon_{file_path.name}"
+                df.to_csv(output_file, index=False)
+                first_file_written = True
+                logging.info(f"Written first anonymized file to {output_file}")
         except Exception as e:
             logging.error(f"Error processing {file_path.name}: {str(e)}")
 
