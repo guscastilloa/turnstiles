@@ -70,15 +70,17 @@ class CoincidenceProcessor:
             
             # Process each record in current bin
             for idx, record in bin_group.iterrows():
+                # Only look at entries that are further along in the sorted DataFrame
+                # This ensures we don't double count
                 potential_matches = processing_data[
-                    (processing_data.index != idx) &
+                    (processing_data.index > idx) &  # This is the key change
                     (processing_data['tipoacceso'] == record['tipoacceso']) &
                     (processing_data['carnet'] != record['carnet'])
                 ]
                 
+                # Look for entries within the time window
                 time_mask = (
-                    (potential_matches['fecha_completa'] >= record['fecha_completa'] - timedelta(seconds=window/2)) &
-                    (potential_matches['fecha_completa'] <= record['fecha_completa'] + timedelta(seconds=window/2))
+                    (potential_matches['fecha_completa'] <= record['fecha_completa'] + timedelta(seconds=window))
                 )
                 matches = potential_matches[time_mask]
                 
