@@ -3,7 +3,7 @@ For example:
 
 ```
 logs/application/
-├── network_aggregation/
+├── coincidences/
 │   └── 2024-02-10/
 │       ├── daily_processing.log
 │       │   "Processed P2000_20160223.csv: 50,000 coincidences found"
