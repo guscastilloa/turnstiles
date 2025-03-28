@@ -37,7 +37,9 @@ class IDMapper:
         self.logger.addHandler(ch)
         
         # File handler
-        fh = logging.FileHandler('id_mapping.log')
+        log_dir = Path('logs')
+        log_dir.mkdir(exist_ok=True)
+        fh = logging.FileHandler(log_dir / 'id_mapping.log')
         fh.setFormatter(formatter)
         self.logger.addHandler(fh)
     
