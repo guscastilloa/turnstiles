@@ -18,7 +18,7 @@ class IDMapper:
     """
     
     def __init__(self, salt_path: Optional[Path] = None):
-        self.salt = self._load_or_create_salt(salt_path)
+        self.salt = self._load_salt(salt_path) 
         self.mappings: Dict[str, Dict] = {
             'turnstile': {},
             'trust': {},
@@ -43,9 +43,13 @@ class IDMapper:
         fh.setFormatter(formatter)
         self.logger.addHandler(fh)
     
-    def _load_or_create_salt(self, salt_path: Optional[Path]) -> bytes:
-        """Load existing salt or create new one if not exists."""
+    def _load_salt(self, salt_path: Optional[Path]) -> bytes:
+        """
+        Load existing salt. If not found, raise an error.
+        The salt is used to create a deterministic mapping between original IDs and anonymous IDs. If the original salt isn't used this might cause compatibility issues with previously anonymized IDs.
+        """
         if salt_path is None:
+            raise ValueError("salt_path must be provided")
             salt_path = Path('config/secure/salt.key')
             
         salt_path.parent.mkdir(parents=True, exist_ok=True)
@@ -54,10 +58,9 @@ class IDMapper:
             with open(salt_path, 'rb') as f:
                 return f.read()
         else:
-            salt = os.urandom(32)
-            with open(salt_path, 'wb') as f:
-                f.write(salt)
-            return salt
+            raise FileNotFoundError(
+                f"Salt file not found. Please create salt file with original salt at {salt_path}."
+            )
     
     def create_anonymous_id(self, original_id: str) -> str:
         """Generate deterministic anonymous ID."""
