@@ -29,19 +29,21 @@ class IDMapper:
     def _setup_logging(self):
         self.logger = logging.getLogger('IDMapper')
         self.logger.setLevel(logging.INFO)
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         
-        # Console handler
-        ch = logging.StreamHandler()
-        ch.setFormatter(formatter)
-        self.logger.addHandler(ch)
+        # StreamHandler for Console
+        console_handler = logging.StreamHandler()
+        self.logger.addHandler(console_handler)
         
-        # File handler
+        # FileHandler for log file
         log_dir = Path('logs')
         log_dir.mkdir(exist_ok=True)
-        fh = logging.FileHandler(log_dir / 'id_mapping.log')
-        fh.setFormatter(formatter)
-        self.logger.addHandler(fh)
+        file_handler = logging.FileHandler(log_dir / 'id_mapping.log')
+        self.logger.addHandler(file_handler)
+
+        # Formatter
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        console_handler.setFormatter(formatter)
+        file_handler.setFormatter(formatter)
     
     def _load_salt(self, salt_path: Optional[Path]) -> bytes:
         """
@@ -77,7 +79,23 @@ class IDMapper:
         ).hexdigest()
     
     def add_identifier(self, original_id: str, source: str) -> str:
-        """Add new identifier and return its anonymous ID."""
+        """Add a new identifier mapping and return its anonymized version.
+        This method creates a new mapping for an original identifier from a specific source,
+        generating an anonymous ID along with timestamp and verification hash. If the mapping
+        already exists, it returns the existing anonymous ID.
+
+        Args:
+            original_id (str): The original identifier to be anonymized
+            source (str): The data source category for the identifier
+        Returns:
+            str: The anonymized identifier
+        Raises:
+            ValueError: If the specified source is not registered in the mappings
+        Example:
+            >>> mapper = IdMapper()
+            >>> anon_id = mapper.add_identifier("user123", "turnstile")
+            >>> print(anon_id)  # Returns something like 'CUST_7B4E2A'
+        """
         if source not in self.mappings:
             raise ValueError(f"Invalid source: {source}")
             
