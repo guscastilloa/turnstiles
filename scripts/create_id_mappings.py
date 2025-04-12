@@ -1,24 +1,53 @@
-# scripts/local/create_id_mappings.py
+# scripts/create_id_mappings.py
+# %%
 from pathlib import Path
 import sys
+import os
 import pandas as pd
 import glob
 import logging
 from typing import List, Dict
 
-root_dir = Path(__file__).parent.parent
-sys.path.append(str(root_dir))
+# ====================================================================#
+# Walk up the directory tree until you find the project root (contains '.git')
+current = os.path.abspath(os.path.dirname(__file__))
+while '.git' not in os.listdir(current):
+    parent = os.path.dirname(current)
+    if parent == current:  # Reached root of filesystem
+        break
+    current = parent
+
+ROOT_DIR = current
+# Add the detected project root to sys.path
+sys.path.append(ROOT_DIR)
+# ====================================================================#
+
+# Define paths
+ROOT_DIR = Path(ROOT_DIR)
+INPUT_PATH = ROOT_DIR / "data" 
+OUTPUT_PATH = ROOT_DIR / "tests/data/"
+SALT_PATH = ROOT_DIR / "config/secure/salt.key"
+
 
 from src.data.id_mapper import IDMapper
+# %%
+logger = logging.getLogger('IDMapper')
+logger.setLevel(logging.INFO)
 
-def setup_logging():
-    """Configure script logging"""
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(levelname)s - %(message)s'
-    )
-    return logging.getLogger('id_mapper')
+# StreamHandler for console
+console_handler = logging.StreamHandler()
+logger.addHandler(console_handler)
 
+# FileHandler for file
+file_handler = logging.FileHandler(ROOT_DIR / 'logs/id_mappings.log')
+logger.addHandler(file_handler)
+
+# Formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+
+# %%
 def process_turnstile_data(mapper: IDMapper, input_dir: Path, output_dir: Path):
     """Treat all turnstile data files"""
     first_file_written = False
@@ -30,7 +59,7 @@ def process_turnstile_data(mapper: IDMapper, input_dir: Path, output_dir: Path):
         try:
             try:
                 df = pd.read_csv(file_path, delimiter=',')
-            except:
+            except pd.errors.ParserError:
                 df = pd.read_csv(file_path, delimiter=';')
             df['carnet'] = df['carnet'].astype(str).apply(
                 lambda x: mapper.add_identifier(x, source='turnstile')
@@ -88,7 +117,6 @@ def process_trust_data(mapper: IDMapper, input_dir: Path, output_dir: Path):
 
 def main():
     """Main function to coordinate anonymization process"""
-    logger = setup_logging()
     
     # Configuration des chemins
     root_dir = Path(__file__).parent.parent
@@ -115,3 +143,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+# %%
