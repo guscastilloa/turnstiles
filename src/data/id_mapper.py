@@ -11,10 +11,6 @@ from typing import Optional, Dict, List
 class IDMapper:
     """
     Manages anonymous ID mapping for turnstile research project.
-    
-    The hash verification column is a checksum that helps verify data integrity
-    and detect any tampering with the mapping files. It's created by hashing
-    the combination of original ID, anonymous ID and timestamp.
     """
     
     def __init__(self, salt_path: Optional[Path] = None):
@@ -28,23 +24,7 @@ class IDMapper:
     
     def _setup_logging(self):
         self.logger = logging.getLogger('IDMapper')
-        self.logger.setLevel(logging.INFO)
-        
-        # StreamHandler for Console
-        console_handler = logging.StreamHandler()
-        self.logger.addHandler(console_handler)
-        
-        # FileHandler for log file
-        log_dir = Path('logs')
-        log_dir.mkdir(exist_ok=True)
-        file_handler = logging.FileHandler(log_dir / 'id_mapping.log')
-        self.logger.addHandler(file_handler)
-
-        # Formatter
-        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-        console_handler.setFormatter(formatter)
-        file_handler.setFormatter(formatter)
-    
+            
     def _load_salt(self, salt_path: Optional[Path]) -> bytes:
         """
         Load existing salt. If not found, raise an error.
@@ -70,18 +50,10 @@ class IDMapper:
             f"{original_id}{self.salt}".encode()
         ).hexdigest()[:12]
     
-    def create_verification_hash(self, original_id: str, 
-                               anon_id: str, 
-                               timestamp: str) -> str:
-        """Create verification hash to detect tampering."""
-        return hashlib.sha256(
-            f"{original_id}{anon_id}{timestamp}{self.salt}".encode()
-        ).hexdigest()
-    
     def add_identifier(self, original_id: str, source: str) -> str:
         """Add a new identifier mapping and return its anonymized version.
         This method creates a new mapping for an original identifier from a specific source,
-        generating an anonymous ID along with timestamp and verification hash. If the mapping
+        generating an anonymous ID along with timestamp. If the mapping
         already exists, it returns the existing anonymous ID.
 
         Args:
@@ -102,12 +74,10 @@ class IDMapper:
         if original_id not in self.mappings[source]:
             timestamp = datetime.now().isoformat()
             anon_id = self.create_anonymous_id(original_id)
-            verification = self.create_verification_hash(original_id, anon_id, timestamp)
             
             self.mappings[source][original_id] = {
                 'anonymous_id': anon_id,
-                'timestamp': timestamp,
-                'verification': verification
+                'timestamp': timestamp
             }
             self.logger.info(f"Added new {source} mapping: {original_id} -> {anon_id}")
             
@@ -123,8 +93,7 @@ class IDMapper:
                     {
                         'original_id': orig_id,
                         'anonymous_id': data['anonymous_id'],
-                        'timestamp': data['timestamp'],
-                        'verification': data['verification']
+                        'timestamp': data['timestamp']
                     }
                     for orig_id, data in self.mappings[source].items()
                 ])
