@@ -56,11 +56,13 @@ def process_turnstile_data(mapper: IDMapper, input_dir: Path, output_dir: Path):
         file_path = Path(csv_file)
         logging.info(f"Processing turnstile file: {file_path.name}")
         
+        # Read data
         try:
-            try:
-                df = pd.read_csv(file_path, delimiter=',')
-            except pd.errors.ParserError:
-                df = pd.read_csv(file_path, delimiter=';')
+            df = pd.read_csv(file_path, delimiter=',')
+        except pd.errors.ParserError:
+            df = pd.read_csv(file_path, delimiter=';')
+        
+        try:
             df['carnet'] = df['carnet'].astype(str).apply(
                 lambda x: mapper.add_identifier(x, source='turnstile')
             )
