@@ -73,9 +73,9 @@ def process_turnstile_data(mapper: IDMapper, input_dir: Path):
     
     for csv_file in glob.glob(str(input_dir / "P2000*.csv")):
         file_path = Path(csv_file)
-        logger.info(f"Processing turnstile file: {file_path.name}")
         
         # Read data
+        logger.info(f"Reading turnstile file: {file_path.name}")
         try:
             df = pd.read_csv(file_path, delimiter=',')
         except pd.errors.ParserError:
@@ -83,8 +83,9 @@ def process_turnstile_data(mapper: IDMapper, input_dir: Path):
                 df = pd.read_csv(file_path, delimiter=';')
             except Exception as e:
                 logger.error(f"Failed to read {file_path.name}: Could not parse with either ',' or ';' delimiters. Error: {str(e)}")
-            return
+            continue
         
+        logger.info(f"  Processing turnstile file: {file_path.name}")
         try:
             df['carnet'] = df['carnet'].astype(str).apply(
                 lambda x: mapper.add_identifier(x, source='turnstile')
