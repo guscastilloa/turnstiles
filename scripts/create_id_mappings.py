@@ -83,7 +83,6 @@ def process_turnstile_data(mapper: IDMapper, input_dir: Path):
                 df = pd.read_csv(file_path, delimiter=';')
             except Exception as e:
                 logger.error(f"Failed to read {file_path.name}: Could not parse with either ',' or ';' delimiters. Error: {str(e)}")
-            continue
         
         logger.info(f"  Processing turnstile file: {file_path.name}")
         try:
