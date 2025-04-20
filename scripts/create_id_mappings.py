@@ -24,8 +24,8 @@ sys.path.append(ROOT_DIR)
 
 # Define paths
 ROOT_DIR = Path(ROOT_DIR)
-INPUT_PATH = ROOT_DIR / "data" 
-OUTPUT_PATH = ROOT_DIR / "tests/data/"
+INPUT_PATH = ROOT_DIR / "data"
+OUTPUT_PATH = ROOT_DIR / "data/id_mappings"
 SALT_PATH = ROOT_DIR / "config/secure/salt.key"
 
 
@@ -48,7 +48,7 @@ console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
 
 # %%
-def process_turnstile_data(mapper: IDMapper, input_dir: Path, output_dir: Path):
+def process_turnstile_data(mapper: IDMapper, input_dir: Path):
     """
     Processes turnstile data files by anonymizing identifiers and writing 
     the first processed file (which will serve as testing stub) to 
@@ -71,7 +71,7 @@ def process_turnstile_data(mapper: IDMapper, input_dir: Path, output_dir: Path):
     
     for csv_file in glob.glob(str(input_dir / "P2000*.csv")):
         file_path = Path(csv_file)
-        logging.info(f"Processing turnstile file: {file_path.name}")
+        logger.info(f"Processing turnstile file: {file_path.name}")
         
         # Read data
         try:
@@ -84,85 +84,64 @@ def process_turnstile_data(mapper: IDMapper, input_dir: Path, output_dir: Path):
                 lambda x: mapper.add_identifier(x, source='turnstile')
             )
         except Exception as e:
-            logging.error(f"Error processing {file_path.name}: {str(e)}")
-        
-        # Only write first file for testing purposes
-        if not first_file_written:
-            try:
-                output_file = output_dir / f"anon_{file_path.name}"
-                df.to_csv(output_file, index=False)
-                first_file_written = True
-                logging.info(f"Written first anonymized file to {output_file}")
-            except Exception as e:
-                logging.error(f"Error processing first file {file_path.name}: {str(e)}")
+            logger.error(f"Error processing {file_path.name}: {str(e)}")
 
-def process_survey_data(mapper: IDMapper, input_dir: Path, output_dir: Path):
+
+def process_survey_data(mapper: IDMapper, input_dir: Path):
     """Treat all MjAlvarez survey data files"""
-    survey_patterns = ['*Amistad*.csv', '*Trabajos*.csv', '*Casa*.csv']
+    first_file_written = False
     
-    for pattern in survey_patterns:
-        for csv_file in glob.glob(str(input_dir / "survey" / pattern)):
-            file_path = Path(csv_file)
-            logging.info(f"Processing survey file: {file_path.name}")
-            
-            try:
-                df = pd.read_csv(file_path)
-                # Les ID sont dans la première colonne et les en-têtes
-                student_ids = set([df.iloc[:, 0].values[0]] + list(df.columns[1:]))
-                for student_id in student_ids:
-                    mapper.add_identifier(str(student_id), source='survey')
-            except Exception as e:
-                logging.error(f"Error processing {file_path.name}: {str(e)}")
+    for csv_file in glob.glob(str(input_dir / "*.csv")):
+        file_path = Path(csv_file)
+        logger.info(f"Processing survey file: {file_path.name}")
+        
+        # Read and process the survey data
+        try:
+            df = pd.read_csv(file_path)
+            # The IDs are in the first column and the headers and because
+            # these are adjacency matrices, taking the IDs of the first row,
+            # , i.e., the colum names, should be enough to get all IDs
+                
+            student_ids = [str(i) for i in list(df.columns[1:])]
+            for student_id in student_ids:
+                mapper.add_identifier(str(student_id), source='survey')
+        except Exception as e:
+            logger.error(f"Error processing {file_path.name}: {str(e)}")
 
-def process_trust_data(mapper: IDMapper, input_dir: Path, output_dir: Path):
+        
+
+def process_trust_data(mapper: IDMapper, input_dir: Path):
     """Treat all TrustExperiment data files"""
-    trust_files = ['MasterIDsFile.csv', 'Lunch.csv', 'Friends.csv', 
-                   'Confide.csv', 'Study.csv', 'MetBefore.csv', 'Saludo.csv']
-    
-    for filename in trust_files:
-        file_path = input_dir / "trust" / filename
-        if file_path.exists():
-            logging.info(f"Processing trust file: {filename}")
-            try:
-                # Détecter l'encodage approprié
-                encodings = {'MasterIDsFile.csv': 'latin-1'}
-                encoding = encodings.get(filename, 'utf-8')
-                
-                df = pd.read_csv(file_path, encoding=encoding)
-                id_column = 'studentID' if filename == 'MasterIDsFile.csv' else 'participantID'
-                
-                if id_column in df.columns:
-                    for student_id in df[id_column].unique():
-                        mapper.add_identifier(str(student_id), source='trust')
-            except Exception as e:
-                logging.error(f"Error processing {filename}: {str(e)}")
+    # First: Use MasterIDsFile.csv to replace all files with anonymized IDs
+    # produced by the IDMapper and using the carnet as the original ID
 
+    masterfile = pd.read_csv(input_dir)
+
+    # Second: normal processing 
+    logger.info(f"Processing trust file: MasterIDsFile.csv")
+
+    for student_id in masterfile['studentID'].unique():
+        mapper.add_identifier(str(student_id), source='trust')
+
+
+# %%
 def main():
-    """Main function to coordinate anonymization process"""
-    
-    # Configuration des chemins
-    root_dir = Path(__file__).parent.parent
-    input_dir = root_dir / "data/raw"
-    output_dir = root_dir / "data/processed"
-    salt_path = root_dir / "config/secure/salt.key"
-    
-    # Créer les répertoires nécessaires
-    output_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Initialiser le mapper
-    mapper = IDMapper(salt_path)
+    """Main function to execute the ID mapping process."""
+     
+    # Create the IDMapper instance with the salt file
+    mapper = IDMapper(SALT_PATH)
     
     # Traiter chaque source de données
-    process_turnstile_data(mapper, 
-                           input_dir.parent / "intermediate/daily", 
-                           root_dir / "tests/data")
-    process_survey_data(mapper, input_dir, output_dir / "survey")
-    process_trust_data(mapper, input_dir, output_dir / "trust")
+    process_turnstile_data(mapper = mapper,
+                           input_dir=INPUT_PATH / "intermediate/daily")
+    process_survey_data(mapper = mapper, 
+                        input_dir= INPUT_PATH / "raw/survey")
+    process_trust_data(mapper = mapper,
+                       input_dir= INPUT_PATH / "raw/trust/MasterIDsFile.csv")
     
     # Sauvegarder tous les mappings
-    mapper.save_mappings(output_dir / "id_mappings")
+    mapper.save_mappings(OUTPUT_PATH)
     logger.info("Completed ID mapping creation for all sources")
 
 if __name__ == "__main__":
-    main()
-# %%
+    main()    
