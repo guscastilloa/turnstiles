@@ -28,6 +28,8 @@ INPUT_PATH = ROOT_DIR / "data"
 OUTPUT_PATH = ROOT_DIR / "data/id_mappings"
 SALT_PATH = ROOT_DIR / "config/secure/salt.key"
 
+# Ensure the output directory exists
+OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 
 from src.data.id_mapper import IDMapper
 # %%
