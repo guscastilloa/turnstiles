@@ -79,14 +79,22 @@ def process_turnstile_data(mapper: IDMapper, input_dir: Path):
         try:
             df = pd.read_csv(file_path, delimiter=',')
         except pd.errors.ParserError:
-            df = pd.read_csv(file_path, delimiter=';')
+            try:
+                df = pd.read_csv(file_path, delimiter=';')
+            except Exception as e:
+                logger.error(f"Failed to read {file_path.name}: Could not parse with either ',' or ';' delimiters. Error: {str(e)}")
+            return
         
         try:
             df['carnet'] = df['carnet'].astype(str).apply(
                 lambda x: mapper.add_identifier(x, source='turnstile')
             )
+        except KeyError:
+            logger.error(f"Error processing {file_path.name}: 'carnet' column not found in the dataframe")
+        except ValueError as e:
+            logger.error(f"Error processing {file_path.name}: Invalid value conversion in 'carnet' column. Error: {str(e)}")
         except Exception as e:
-            logger.error(f"Error processing {file_path.name}: {str(e)}")
+            logger.error(f"Error processing {file_path.name}: Unexpected error while processing 'carnet' column. Error: {type(e).__name__}: {str(e)}")
 
 
 def process_survey_data(mapper: IDMapper, input_dir: Path):
